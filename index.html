@@ -130,5 +130,33 @@
             }
         });
     </script>
+
+<script>
+    Telegram.WebApp.ready(); // Подготавливаем WebApp
+
+    // Настраиваем кнопку "Готово"
+    Telegram.WebApp.MainButton.setText("Готово").show();
+
+    // Делаем кнопку активной
+    Telegram.WebApp.MainButton.onClick(function () {
+        document.activeElement.blur(); // Скрываем клавиатуру
+        Telegram.WebApp.MainButton.hide(); // Скрываем кнопку после нажатия
+    });
+
+    // Показываем кнопку, когда пользователь фокусируется на инпуте
+    document.querySelectorAll("input, textarea").forEach(input => {
+        input.addEventListener("focus", () => {
+            Telegram.WebApp.MainButton.show();
+        });
+
+        input.addEventListener("blur", () => {
+            setTimeout(() => {
+                if (document.activeElement.tagName !== "INPUT" && document.activeElement.tagName !== "TEXTAREA") {
+                    Telegram.WebApp.MainButton.hide();
+                }
+            }, 100);
+        });
+    });
+</script>
 </body>
 </html>
