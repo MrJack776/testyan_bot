@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        input, button {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        button {
+            background-color: #0088cc;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h2>Регистрация</h2>
+    <input type="text" id="name" placeholder="Имя">
+    <input type="tel" id="phone" placeholder="Телефон">
+    <input type="email" id="email" placeholder="Email">
+    <input type="text" id="team" placeholder="Название команды">
+    <input type="number" id="team_size" placeholder="Количество человек">
+    <input type="text" id="promo" placeholder="Промокод (необязательно)">
+    <input type="text" id="comment" placeholder="Комментарий (необязательно)">
+    <button onclick="sendData()">Отправить</button>
+
+    <script>
+        function sendData() {
+            let data = {
+                name: document.getElementById("name").value,
+                phone: document.getElementById("phone").value,
+                email: document.getElementById("email").value,
+                team: document.getElementById("team").value,
+                team_size: document.getElementById("team_size").value,
+                promo: document.getElementById("promo").value || "Не указан",
+                comment: document.getElementById("comment").value || "Не указан"
+            };
+
+            // Отправка данных в Telegram Web App
+            Telegram.WebApp.sendData(JSON.stringify(data));
+
+            // Закрываем Web App после отправки
+            Telegram.WebApp.close();
+        }
+    </script>
+</body>
+</html>
