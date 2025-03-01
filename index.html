@@ -149,42 +149,28 @@
     }
 </style>
 
-<script>
-    function isMobile() {
-        return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-    }
+document.addEventListener("DOMContentLoaded", function () {
+    const inputs = document.querySelectorAll("input, textarea");
 
-    document.addEventListener("DOMContentLoaded", function () {
-        if (isMobile()) {
-            Telegram.WebApp.enableClosingConfirmation(false); // Отключаем подтверждение выхода
-            Telegram.WebApp.showMainButton();
-        } else {
-            Telegram.WebApp.hideMainButton();
-        }
-    });
-
-    document.querySelectorAll("input, textarea").forEach(input => {
+    inputs.forEach(input => {
         input.addEventListener("focus", () => {
-            if (isMobile()) {
-                Telegram.WebApp.showMainButton();
-            }
+            Telegram.WebApp.MainButton.setText("Готово");
+            Telegram.WebApp.MainButton.show();
         });
 
         input.addEventListener("blur", () => {
             setTimeout(() => {
-                if (document.activeElement.tagName !== "INPUT" && document.activeElement.tagName !== "TEXTAREA") {
-                    Telegram.WebApp.hideMainButton();
+                if (!document.activeElement.matches("input, textarea")) {
+                    Telegram.WebApp.MainButton.hide();
                 }
-            }, 100);
+            }, 100); // Даем время переключиться между полями, чтобы кнопка не исчезала мгновенно
         });
     });
 
-    Telegram.WebApp.MainButton.setText("Готово");
-    Telegram.WebApp.MainButton.onClick(() => {
-        document.activeElement.blur();
-        Telegram.WebApp.hideMainButton();
+    Telegram.WebApp.MainButton.onClick(function () {
+        document.activeElement.blur(); // Убираем фокус, скрываем клавиатуру
     });
-</script>
+});
     
 </body>
 </html>
