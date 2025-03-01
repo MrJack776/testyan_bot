@@ -186,28 +186,7 @@
     });
 </script>
     
-document.addEventListener("DOMContentLoaded", function () {
-    const inputs = document.querySelectorAll("input, textarea");
 
-    inputs.forEach(input => {
-        input.addEventListener("focus", () => {
-            Telegram.WebApp.MainButton.setText("Готово");
-            Telegram.WebApp.MainButton.show();
-        });
-
-        input.addEventListener("blur", () => {
-            setTimeout(() => {
-                if (!document.activeElement.matches("input, textarea")) {
-                    Telegram.WebApp.MainButton.hide();
-                }
-            }, 100); // Даем время переключиться между полями, чтобы кнопка не исчезала мгновенно
-        });
-    });
-
-    Telegram.WebApp.MainButton.onClick(function () {
-        document.activeElement.blur(); // Убираем фокус, скрываем клавиатуру
-    });
-});
     
 </body>
 </html>
