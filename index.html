@@ -151,7 +151,7 @@
 
 <script>
     Telegram.WebApp.ready();
-    Telegram.WebApp.expand();
+    Telegram.WebApp.expand(); // Разворачиваем WebApp
 
     function isMobileDevice() {
         return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -175,26 +175,27 @@
 
     document.addEventListener("DOMContentLoaded", function () {
         if (isMobileDevice()) { 
+            Telegram.WebApp.MainButton.setText("Готово");
+            Telegram.WebApp.MainButton.hide(); // Скрываем по умолчанию
+
             const inputs = document.querySelectorAll("input, textarea");
 
             inputs.forEach(input => {
                 input.addEventListener("focus", () => {
-                    Telegram.WebApp.MainButton.setText("Готово");
-                    Telegram.WebApp.MainButton.show(); // Показываем кнопку
-                    setTimeout(() => window.scrollTo(0, document.body.scrollHeight), 300);
+                    Telegram.WebApp.MainButton.show(); // Показываем кнопку "Готово"
                 });
 
                 input.addEventListener("blur", () => {
                     setTimeout(() => {
                         if (!document.activeElement.matches("input, textarea")) {
-                            Telegram.WebApp.MainButton.hide();
+                            Telegram.WebApp.MainButton.hide(); // Прячем кнопку
                         }
                     }, 300);
                 });
             });
 
             Telegram.WebApp.MainButton.onClick(() => {
-                document.activeElement.blur();
+                document.activeElement.blur(); // Закрываем клавиатуру
                 Telegram.WebApp.MainButton.hide();
             });
         }
