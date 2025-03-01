@@ -150,31 +150,41 @@
 </style>
 
 <script>
-    Telegram.WebApp.ready(); // Подготавливаем WebApp
+    function isMobile() {
+        return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    }
 
-    // Настраиваем кнопку "Готово"
-    Telegram.WebApp.MainButton.setText("Готово").show();
-
-    // Делаем кнопку активной
-    Telegram.WebApp.MainButton.onClick(function () {
-        document.activeElement.blur(); // Скрываем клавиатуру
-        Telegram.WebApp.MainButton.hide(); // Скрываем кнопку после нажатия
+    document.addEventListener("DOMContentLoaded", function () {
+        if (isMobile()) {
+            Telegram.WebApp.enableClosingConfirmation(false); // Отключаем подтверждение выхода
+            Telegram.WebApp.showMainButton();
+        } else {
+            Telegram.WebApp.hideMainButton();
+        }
     });
 
-    // Показываем кнопку, когда пользователь фокусируется на инпуте
     document.querySelectorAll("input, textarea").forEach(input => {
         input.addEventListener("focus", () => {
-            Telegram.WebApp.MainButton.show();
+            if (isMobile()) {
+                Telegram.WebApp.showMainButton();
+            }
         });
 
         input.addEventListener("blur", () => {
             setTimeout(() => {
                 if (document.activeElement.tagName !== "INPUT" && document.activeElement.tagName !== "TEXTAREA") {
-                    Telegram.WebApp.MainButton.hide();
+                    Telegram.WebApp.hideMainButton();
                 }
             }, 100);
         });
     });
+
+    Telegram.WebApp.MainButton.setText("Готово");
+    Telegram.WebApp.MainButton.onClick(() => {
+        document.activeElement.blur();
+        Telegram.WebApp.hideMainButton();
+    });
 </script>
+    
 </body>
 </html>
