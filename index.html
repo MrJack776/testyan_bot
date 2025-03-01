@@ -149,32 +149,31 @@
     }
 </style>
 
-<button id="doneButton">Готово</button>
-
 <script>
-    const doneButton = document.getElementById("doneButton");
+    Telegram.WebApp.ready(); // Подготавливаем WebApp
 
+    // Настраиваем кнопку "Готово"
+    Telegram.WebApp.MainButton.setText("Готово").show();
+
+    // Делаем кнопку активной
+    Telegram.WebApp.MainButton.onClick(function () {
+        document.activeElement.blur(); // Скрываем клавиатуру
+        Telegram.WebApp.MainButton.hide(); // Скрываем кнопку после нажатия
+    });
+
+    // Показываем кнопку, когда пользователь фокусируется на инпуте
     document.querySelectorAll("input, textarea").forEach(input => {
         input.addEventListener("focus", () => {
-            setTimeout(() => {
-                let keyboardHeight = window.innerHeight - document.documentElement.clientHeight;
-                doneButton.style.bottom = (keyboardHeight + 10) + "px";
-                doneButton.style.display = "block"; // Показываем кнопку
-            }, 300); // Задержка для корректного определения клавиатуры
+            Telegram.WebApp.MainButton.show();
         });
 
         input.addEventListener("blur", () => {
             setTimeout(() => {
                 if (document.activeElement.tagName !== "INPUT" && document.activeElement.tagName !== "TEXTAREA") {
-                    doneButton.style.display = "none"; // Скрываем кнопку
+                    Telegram.WebApp.MainButton.hide();
                 }
             }, 100);
         });
-    });
-
-    doneButton.addEventListener("click", () => {
-        document.activeElement.blur(); // Скрываем клавиатуру
-        doneButton.style.display = "none"; // Прячем кнопку
     });
 </script>
 </body>
