@@ -6,38 +6,72 @@
     <title>Регистрация</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body {
+       body {
             font-family: Arial, sans-serif;
+            background-color: #0047AB; /* Яркий синий фон */
+            color: white;
             text-align: center;
             padding: 20px;
         }
-        input, button {
-            width: 90%;
+        form {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            text-align: left;
+        }
+        input, select, textarea {
+            width: 100%;
             padding: 10px;
             margin: 10px 0;
-            font-size: 16px;
+            border: none;
+            border-radius: 5px;
         }
         button {
-            background-color: #0088cc;
-            color: white;
+            background-color: #FFD700;
+            color: black;
+            padding: 10px 20px;
             border: none;
+            border-radius: 20px; /* Округлая кнопка */
             cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #FFC107;
         }
     </style>
 </head>
 <body>
-    <h2>Регистрация</h2>
-    <input type="text" id="name" placeholder="Имя капитана">
-    <input type="tel" id="phone" placeholder="Телефон">
-    <input type="email" id="email" placeholder="Email">
-    <input type="text" id="team" placeholder="Название команды">
-    <input type="number" id="team_size" placeholder="Количество человек">
-    <input type="text" id="promo" placeholder="Промокод (если есть)">
-    <input type="text" id="comment" placeholder="Комментарий (необязательно)">
-    <button onclick="sendData()">Отправить</button>
+    <h2>Регистрация команды</h2>
+    <form id="regForm">
+        <label>Имя:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label>Телефон:</label>
+        <input type="tel" id="phone" name="phone" required>
+
+        <label>Почта:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label>Название команды:</label>
+        <input type="text" id="team" name="team" required>
+
+        <label>Количество человек:</label>
+        <input type="number" id="team_size" name="team_size" required>
+
+        <label>Промокод:</label>
+        <input type="text" id="promo" name="promo">
+
+        <label>Комментарий:</label>
+        <textarea id="comment" name="comment"></textarea>
+
+        <button type="submit">Отправить</button>
+    </form>
 
     <script>
-        function sendData() {
+        document.getElementById("regForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Отмена стандартной отправки формы
+
             let data = {
                 name: document.getElementById("name").value,
                 phone: document.getElementById("phone").value,
@@ -51,9 +85,12 @@
             // Отправка данных в Telegram Web App
             Telegram.WebApp.sendData(JSON.stringify(data));
 
+            // Показываем пользователю, что форма отправлена
+            alert("✅ Данные отправлены!");
+
             // Закрываем Web App после отправки
-            Telegram.WebApp.close();
-        }
+            setTimeout(() => Telegram.WebApp.close(), 1000);
+        });
     </script>
 </body>
 </html>
