@@ -150,24 +150,44 @@
 </style>
 
 <script>
-    function isMobile() {
+    Telegram.WebApp.ready();
+    Telegram.WebApp.expand();
+
+    function isMobileDevice() {
         return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
     }
 
-    document.addEventListener("DOMContentLoaded", function () {
-        if (isMobile()) {
-            Telegram.WebApp.enableClosingConfirmation(false);
+    function sendData() {
+        let data = {
+            name: document.getElementById("name").value,
+            phone: document.getElementById("phone").value,
+            email: document.getElementById("email").value,
+            team: document.getElementById("team").value,
+            team_size: document.getElementById("team_size").value,
+            promo: document.getElementById("promo").value || "Не указан",
+            comment: document.getElementById("comment").value || "Не указан"
+        };
 
-            document.querySelectorAll("input, textarea").forEach(input => {
+        Telegram.WebApp.sendData(JSON.stringify(data));
+        alert("Данные отправлены!");
+        setTimeout(() => Telegram.WebApp.close(), 1000);
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        if (isMobileDevice()) { 
+            const inputs = document.querySelectorAll("input, textarea");
+
+            inputs.forEach(input => {
                 input.addEventListener("focus", () => {
                     Telegram.WebApp.MainButton.setText("Готово");
-                    Telegram.WebApp.showMainButton();
+                    Telegram.WebApp.MainButton.show(); // Показываем кнопку
+                    setTimeout(() => window.scrollTo(0, document.body.scrollHeight), 300);
                 });
 
                 input.addEventListener("blur", () => {
                     setTimeout(() => {
                         if (!document.activeElement.matches("input, textarea")) {
-                            Telegram.WebApp.hideMainButton();
+                            Telegram.WebApp.MainButton.hide();
                         }
                     }, 300);
                 });
@@ -175,10 +195,8 @@
 
             Telegram.WebApp.MainButton.onClick(() => {
                 document.activeElement.blur();
-                Telegram.WebApp.hideMainButton();
+                Telegram.WebApp.MainButton.hide();
             });
-        } else {
-            Telegram.WebApp.hideMainButton(); // Скрываем кнопку на ПК
         }
     });
 </script>
