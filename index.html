@@ -105,5 +105,22 @@
             Telegram.WebApp.close();
         }
     </script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const inputs = document.querySelectorAll("input, textarea, select");
+
+        inputs.forEach(input => {
+            input.addEventListener("focus", () => {
+                document.body.style.paddingBottom = "300px"; // Делаем отступ внизу, чтобы можно было прокрутить
+            });
+
+            input.addEventListener("blur", () => {
+                document.body.style.paddingBottom = "0"; // Убираем отступ, когда клавиатура скрывается
+            });
+        });
+    });
+</script>
+</body>
+</html>
 </body>
 </html>
