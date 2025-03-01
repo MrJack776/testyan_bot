@@ -6,9 +6,9 @@
     <title>Регистрация</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-       body {
+        body {
             font-family: Arial, sans-serif;
-            background-color: #0047AB; /* Яркий синий фон */
+            background-color: #0047AB;
             color: white;
             text-align: center;
             padding: 20px;
@@ -19,6 +19,9 @@
             border-radius: 10px;
             display: inline-block;
             text-align: left;
+            width: 80%;
+            max-width: 400px;
+            box-sizing: border-box;
         }
         input, select, textarea {
             width: 100%;
@@ -26,18 +29,37 @@
             margin: 10px 0;
             border: none;
             border-radius: 5px;
+            box-sizing: border-box;
+        }
+        input[type="range"] {
+            width: 100%;
+            -webkit-appearance: none;
+            background: transparent;
+        }
+        input[type="range"]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 8px;
+            background: #FFD700;
+            border-radius: 4px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            margin-top: -6px;
         }
         button {
             background-color: #FFD700;
             color: black;
             padding: 10px 20px;
             border: none;
-            border-radius: 20px; /* Округлая кнопка */
+            border-radius: 20px;
             cursor: pointer;
             font-size: 16px;
-        }
-        button:hover {
-            background-color: #FFC107;
+            display: block;
+            margin: 20px auto 0 auto;
         }
     </style>
 </head>
@@ -45,33 +67,31 @@
     <h2>Регистрация команды</h2>
     <form id="regForm">
         <label>Имя:</label>
-        <input type="text" id="name" name="name" required>
-
+        <input type="text" id="name" required>
+        
         <label>Телефон:</label>
-        <input type="tel" id="phone" name="phone" required>
-
+        <input type="tel" id="phone" required>
+        
         <label>Почта:</label>
-        <input type="email" id="email" name="email" required>
-
+        <input type="email" id="email" required>
+        
         <label>Название команды:</label>
-        <input type="text" id="team" name="team" required>
-
-        <label>Количество человек:</label>
-        <input type="number" id="team_size" name="team_size" required>
-
-        <label>Промокод:</label>
-        <input type="text" id="promo" name="promo">
-
-        <label>Комментарий:</label>
-        <textarea id="comment" name="comment"></textarea>
-
-        <button type="submit">Отправить</button>
+        <input type="text" id="team" required>
+        
+        <label for="team_size">Количество человек: <output id="team_size_value">5</output></label>
+        <input type="range" name="team_size" id="team_size" min="2" max="9" value="5" step="1" oninput="team_size_value.value = this.value">
+        
+        
+        <label>Промокод (если есть):</label>
+        <input type="text" id="promo" placeholder="Если есть">
+        
+        <label>Комментарий (если есть):</label>
+        <textarea id="comment" placeholder="Или шутку :) "></textarea>
+        
+        <button type="button" onclick="sendData()">Отправить</button>
     </form>
-
     <script>
-        document.getElementById("regForm").addEventListener("submit", function(event) {
-            event.preventDefault(); // Отмена стандартной отправки формы
-
+        function sendData() {
             let data = {
                 name: document.getElementById("name").value,
                 phone: document.getElementById("phone").value,
@@ -81,16 +101,9 @@
                 promo: document.getElementById("promo").value || "Не указан",
                 comment: document.getElementById("comment").value || "Не указан"
             };
-
-            // Отправка данных в Telegram Web App
             Telegram.WebApp.sendData(JSON.stringify(data));
-
-            // Показываем пользователю, что форма отправлена
-            alert("✅ Данные отправлены!");
-
-            // Закрываем Web App после отправки
-            setTimeout(() => Telegram.WebApp.close(), 1000);
-        });
+            Telegram.WebApp.close();
+        }
     </script>
 </body>
 </html>
