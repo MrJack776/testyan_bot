@@ -30,25 +30,7 @@
             border: none;
             border-radius: 5px;
             box-sizing: border-box;
-        }
-        input[type="range"] {
-            width: 100%;
-            -webkit-appearance: none;
-            background: transparent;
-        }
-        input[type="range"]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 8px;
-            background: #FFD700;
-            border-radius: 4px;
-        }
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 20px;
-            height: 20px;
-            background: white;
-            border-radius: 50%;
-            margin-top: -6px;
+            font-size: 16px;
         }
         button {
             background-color: #FFD700;
@@ -79,7 +61,7 @@
         <input type="text" id="team" required>
         
         <label for="team_size">Количество человек: <output id="team_size_value">5</output></label>
-        <input type="range" name="team_size" id="team_size" min="2" max="9" value="5" step="1" oninput="team_size_value.value = this.value">
+        <input type="range" id="team_size" min="2" max="9" value="5" step="1" oninput="team_size_value.value = this.value">
         
         <label>Промокод:</label>
         <input type="text" id="promo" placeholder="Если есть">
@@ -91,7 +73,25 @@
     </form>
 
     <script>
+        Telegram.WebApp.ready();
+        Telegram.WebApp.expand();
+
+        function validateForm() {
+            let name = document.getElementById("name").value.trim();
+            let phone = document.getElementById("phone").value.trim();
+            let email = document.getElementById("email").value.trim();
+            let team = document.getElementById("team").value.trim();
+
+            if (!name || !phone || !email || !team) {
+                alert("Пожалуйста, заполните все обязательные поля!");
+                return false;
+            }
+            return true;
+        }
+
         function sendData() {
+            if (!validateForm()) return;
+
             let data = {
                 name: document.getElementById("name").value,
                 phone: document.getElementById("phone").value,
@@ -101,92 +101,37 @@
                 promo: document.getElementById("promo").value || "Не указан",
                 comment: document.getElementById("comment").value || "Не указан"
             };
+
             Telegram.WebApp.sendData(JSON.stringify(data));
-            Telegram.WebApp.close();
+            alert("Данные отправлены!");
+            setTimeout(() => Telegram.WebApp.close(), 1000);
         }
-    </script>
 
-    <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const inputs = document.querySelectorAll("input, textarea, select");
-
-            inputs.forEach(input => {
+            document.querySelectorAll("input, textarea").forEach(input => {
                 input.addEventListener("focus", () => {
-                    document.body.style.paddingBottom = "300px"; // Делаем отступ внизу, чтобы можно было прокрутить
+                    if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                        Telegram.WebApp.MainButton.setText("Готово");
+                        Telegram.WebApp.showMainButton();
+                        setTimeout(() => window.scrollTo(0, document.body.scrollHeight), 300);
+                    }
                 });
 
                 input.addEventListener("blur", () => {
-                    document.body.style.paddingBottom = "0"; // Убираем отступ, когда клавиатура скрывается
+                    setTimeout(() => {
+                        if (!document.activeElement.matches("input, textarea")) {
+                            Telegram.WebApp.hideMainButton();
+                        }
+                    }, 300);
                 });
             });
-        });
 
-        // Закрытие клавиатуры при клике вне формы
-        document.addEventListener("click", function (event) {
-            let form = document.getElementById("regForm");
-
-            if (!form.contains(event.target)) {
-                document.activeElement.blur(); // Закрываем клавиатуру
-            }
+            Telegram.WebApp.MainButton.onClick(() => {
+                document.activeElement.blur();
+                Telegram.WebApp.hideMainButton();
+            });
         });
     </script>
 
-<style>
-    #doneButton {
-        position: fixed;
-        bottom: 10px;
-        left: 50%;
-        transform: translateX(-50%);
-        background-color: #FFD700;
-        color: black;
-        padding: 8px 20px;
-        border: none;
-        border-radius: 15px;
-        font-size: 14px;
-        cursor: pointer;
-        display: none; /* Скрыта по умолчанию */
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    }
-</style>
-
-<script>
-    function isMobile() {
-        return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-    }
-
-    document.addEventListener("DOMContentLoaded", function () {
-        if (isMobile()) {
-            Telegram.WebApp.enableClosingConfirmation(false); // Отключаем подтверждение выхода
-            Telegram.WebApp.showMainButton();
-        } else {
-            Telegram.WebApp.hideMainButton();
-        }
-    });
-
-    document.querySelectorAll("input, textarea").forEach(input => {
-        input.addEventListener("focus", () => {
-            if (isMobile()) {
-                Telegram.WebApp.showMainButton();
-            }
-        });
-
-        input.addEventListener("blur", () => {
-            setTimeout(() => {
-                if (document.activeElement.tagName !== "INPUT" && document.activeElement.tagName !== "TEXTAREA") {
-                    Telegram.WebApp.hideMainButton();
-                }
-            }, 100);
-        });
-    });
-
-    Telegram.WebApp.MainButton.setText("Готово");
-    Telegram.WebApp.MainButton.onClick(() => {
-        document.activeElement.blur();
-        Telegram.WebApp.hideMainButton();
-    });
-</script>
-    
-
-    
 </body>
 </html>
