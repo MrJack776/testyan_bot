@@ -81,7 +81,6 @@
         <label for="team_size">Количество человек: <output id="team_size_value">5</output></label>
         <input type="range" name="team_size" id="team_size" min="2" max="9" value="5" step="1" oninput="team_size_value.value = this.value">
         
-        
         <label>Промокод:</label>
         <input type="text" id="promo" placeholder="Если есть">
         
@@ -90,6 +89,7 @@
         
         <button type="button" onclick="sendData()">Отправить</button>
     </form>
+
     <script>
         function sendData() {
             let data = {
@@ -105,22 +105,30 @@
             Telegram.WebApp.close();
         }
     </script>
+
     <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const inputs = document.querySelectorAll("input, textarea, select");
+        document.addEventListener("DOMContentLoaded", function () {
+            const inputs = document.querySelectorAll("input, textarea, select");
 
-        inputs.forEach(input => {
-            input.addEventListener("focus", () => {
-                document.body.style.paddingBottom = "300px"; // Делаем отступ внизу, чтобы можно было прокрутить
-            });
+            inputs.forEach(input => {
+                input.addEventListener("focus", () => {
+                    document.body.style.paddingBottom = "300px"; // Делаем отступ внизу, чтобы можно было прокрутить
+                });
 
-            input.addEventListener("blur", () => {
-                document.body.style.paddingBottom = "0"; // Убираем отступ, когда клавиатура скрывается
+                input.addEventListener("blur", () => {
+                    document.body.style.paddingBottom = "0"; // Убираем отступ, когда клавиатура скрывается
+                });
             });
         });
-    });
-</script>
-</body>
-</html>
+
+        // Закрытие клавиатуры при клике вне формы
+        document.addEventListener("click", function (event) {
+            let form = document.getElementById("regForm");
+
+            if (!form.contains(event.target)) {
+                document.activeElement.blur(); // Закрываем клавиатуру
+            }
+        });
+    </script>
 </body>
 </html>
